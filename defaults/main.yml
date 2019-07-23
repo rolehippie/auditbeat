@@ -1,0 +1,2 @@
+auditbeat_service_state: stopped
+auditbeat_service_enabled: False
