@@ -1,2 +1,9 @@
+# Standards: 0.1
+---
+# @var auditbeat_service_state:description: State for the service definition
 auditbeat_service_state: stopped
+
+# @var auditbeat_service_enabled:description: Switch the service into enabled state
 auditbeat_service_enabled: False
+
+...
