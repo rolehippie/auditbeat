@@ -12,7 +12,7 @@
   apt_repository:
     repo: deb https://artifacts.elastic.co/packages/6.x/apt stable main
     filename: elastic
-    update_cache: yes
+    update_cache: True
     state: present
   tags:
     - auditbeat
@@ -21,7 +21,7 @@
   loop:
     - auditbeat
   package:
-    name: '{{ item }}'
+    name: "{{ item }}"
     state: present
   tags:
     - auditbeat
@@ -29,10 +29,10 @@
 - name: Start auditbeat service
   systemd:
     name: auditbeat
-    state: '{{ auditbeat_service_state }}'
-    daemon_reload: yes
-    masked: no
-    enabled: '{{ auditbeat_service_enabled }}'
+    state: "{{ auditbeat_service_state }}"
+    daemon_reload: True
+    masked: False
+    enabled: "{{ auditbeat_service_enabled }}"
   tags:
     - auditbeat
 
