@@ -1,0 +1,10 @@
+{% if item.comment is defined and item.comment %}
+## {{ item.comment }}
+{% endif %}
+{% if not item.rule is string and item.rule is iterable %}
+{% for rule in item.rule %}
+{{ rule }}
+{% endfor %}
+{% else %}
+{{ item.rule }}
+{% endif %}

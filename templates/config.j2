@@ -1,0 +1,20 @@
+name: {{ auditbeat_name }}
+tags: {{ auditbeat_tags | to_yaml | trim }}
+
+auditbeat.modules:
+  {{ (auditbeat_default_modules + auditbeat_group_modules + auditbeat_host_modules) | to_nice_yaml(indent=2) | indent(width=2, indentfirst=False) | trim }}
+{% if (auditbeat_default_processors + auditbeat_group_processors + auditbeat_host_processors) | length > 0 %}
+
+processors:
+  {{ (auditbeat_default_processors + auditbeat_group_processors + auditbeat_host_processors) | to_nice_yaml(indent=2) | indent(width=2, indentfirst=False) | trim }}
+{% endif %}
+
+output.logstash:
+  enabled: {{ auditbeat_logstash_enabled | lower }}
+  hosts: {{ auditbeat_logstash_hosts | to_yaml | trim }}
+
+output.console:
+  enabled: {{ auditbeat_console_enabled | lower }}
+
+logging.level: {{ auditbeat_logging_level }}
+logging.selectors: {{ auditbeat_logging_selectors | to_yaml | trim }}

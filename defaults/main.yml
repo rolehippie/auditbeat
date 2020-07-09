@@ -1,9 +1,254 @@
 # Standards: 0.1
 ---
+# @var auditbeat_major_version:description: Major version to install, used for the APT repository
+auditbeat_major_version: 7
+
+# @var auditbeat_configuration_enabled:description: Enable configuration of the service at all
+auditbeat_configuration_enabled: True
+
 # @var auditbeat_service_state:description: State for the service definition
-auditbeat_service_state: stopped
+auditbeat_service_state: started
 
 # @var auditbeat_service_enabled:description: Switch the service into enabled state
-auditbeat_service_enabled: False
+auditbeat_service_enabled: True
+
+# @var auditbeat_name:description: Name of the shipper within the output
+auditbeat_name: "{{ ansible_hostname }}"
+
+# @var auditbeat_tags:description: List of tags to assign for the shipper
+auditbeat_tags: []
+
+# @var auditbeat_rules_path:description: Path to store the defined rules
+auditbeat_rules_path: /etc/auditbeat/audit.rules.d
+
+# @var auditbeat_suid_guid_rule_enabled:description: Search suid/guid programs on disk
+auditbeat_suid_guid_rule_enabled: True
+
+# @var auditbeat_suid_guid_rule_files:description: Define a default list of suid/guid files
+auditbeat_suid_guid_rule_files: []
+
+# @var auditbeat_default_rules:description: List of default rules, gets written to separate files
+# @var auditbeat_default_rules:example: >
+# auditbeat_default_rules:
+#   - name: workingdir
+#     comment: Ignore current working directory records
+#     rule: |
+#       -a always,exclude -F msgtype=CWD
+#   - name: eventfilter
+#     comment: High Volume Event Filter
+#     rule:
+#       - '-a exit,never -F arch=b32 -F dir=/dev/shm -k sharedmemaccess'
+#   - name: foobar
+#     state: absent
+# @end
+auditbeat_default_rules:
+  - name: current-dir
+    comment: Ignore current working directory records
+    rule:
+      - '-a always,exclude -F msgtype=CWD'
+  - name: ignore-eoe
+    comment: Ignore EOE records (End Of Event, not needed)
+    rule:
+      - '-a always,exclude -F msgtype=EOE'
+  - name: high-volume
+    comment: High Volume Event Filter
+    rule:
+      - '-a exit,never -F arch=b32 -F dir=/dev/shm -k sharedmemaccess'
+      - '-a exit,never -F arch=b64 -F dir=/dev/shm -k sharedmemaccess'
+      - '-a exit,never -F arch=b32 -F dir=/var/lock/lvm -k locklvm'
+      - '-a exit,never -F arch=b64 -F dir=/var/lock/lvm -k locklvm'
+  - name: ignore-cron
+    comment: Cron jobs fill the logs useless stuff
+    rule:
+      - '-a never,user -F subj_type=crond_t'
+      - '-a exit,never -F subj_type=crond_t'
+
+  - name: cis-4_1_4
+    weight: 20
+    comment: CIS 4.1.4 - Changes to the time
+    rule:
+      - '-a always,exit -F arch=b64 -S adjtimex -S settimeofday -k time-change'
+      - '-a always,exit -F arch=b32 -S adjtimex -S settimeofday -S stime -k time-change'
+      - '-a always,exit -F arch=b64 -S clock_settime -k time-change'
+      - '-a always,exit -F arch=b32 -S clock_settime -k time-change'
+      - '-w /etc/localtime -p wa -k time-change'
+
+  - name: cis-4_1_5
+    weight: 20
+    comment: CIS 4.1.5 - Changes to user/group information
+    rule:
+      - '-w /etc/group -p wa -k identity'
+      - '-w /etc/passwd -p wa -k identity'
+      - '-w /etc/gshadow -p wa -k identity'
+      - '-w /etc/shadow -p wa -k identity'
+      - '-w /etc/security/opasswd -p wa -k identity'
+
+  - name: cis-4_1_6
+    weight: 20
+    comment: CIS 4.1.6 - Changes to the network environment
+    rule:
+      - '-a exit,always -F arch=b64 -S sethostname -S setdomainname -k system-locale'
+      - '-a exit,always -F arch=b32 -S sethostname -S setdomainname -k system-locale'
+      - '-w /etc/issue -p wa -k system-locale'
+      - '-w /etc/issue.net -p wa -k system-locale'
+      - '-w /etc/hosts -p wa -k system-locale'
+      - '-w /etc/network -p wa -k system-locale'
+
+  - name: cis-4_1_7
+    weight: 20
+    comment: CIS 4.1.7 - Changes to system's Mandatory Access Controls
+    rule:
+      - '-w /etc/apparmor/ -p wa -k MAC-policy'
+      - '-w /etc/apparmor.d/ -p wa -k MAC-policy'
+
+  - name: cis-4_1_8
+    weight: 20
+    comment: CIS 4.1.8 - Log login/logout events
+    rule:
+      - '-w /var/log/faillog -p wa -k logins'
+      - '-w /var/log/lastlog -p wa -k logins'
+      - '-w /var/log/tallylog -p wa -k logins'
+
+  - name: cis-4_1_9
+    weight: 20
+    comment: CIS 4.1.9 - Log session initiation information
+    rule:
+      - '-w /var/run/utmp -p wa -k session'
+      - '-w /var/log/wtmp -p wa -k logins'
+      - '-w /var/log/btmp -p wa -k logins'
+
+  - name: cis-4_1_10
+    weight: 20
+    comment: CIS 4.1.10 - Log Discretionary Access Control modifications
+    rule:
+      - '-a always,exit -F arch=b64 -S chmod -S fchmod -S fchmodat -F auid>=1000 -F auid!=4294967295 -k perm_mod'
+      - '-a always,exit -F arch=b32 -S chmod -S fchmod -S fchmodat -F auid>=1000 -F auid!=4294967295 -k perm_mod'
+      - '-a always,exit -F arch=b64 -S chown -S fchown -S fchownat -S lchown -F auid>=1000 -F auid!=4294967295 -k perm_mod'
+      - '-a always,exit -F arch=b32 -S chown -S fchown -S fchownat -S lchown -F auid>=1000 -F auid!=4294967295 -k perm_mod'
+      - '-a always,exit -F arch=b64 -S setxattr -S lsetxattr -S fsetxattr -S removexattr -S lremovexattr -S fremovexattr -F auid>=1000 -F auid!=4294967295 -k perm_mod'
+      - '-a always,exit -F arch=b32 -S setxattr -S lsetxattr -S fsetxattr -S removexattr -S lremovexattr -S fremovexattr -F auid>=1000 -F auid!=4294967295 -k perm_mod'
+
+  - name: cis-4_1_11
+    weight: 20
+    comment: CIS 4.1.11 - Log unsuccessful unauthorized file access attempts
+    rule:
+      - '-a always,exit -F arch=b64 -S creat -S open -S openat -S truncate -S ftruncate -F exit=-EACCES -F auid>=1000 -F auid!=4294967295 -k access'
+      - '-a always,exit -F arch=b32 -S creat -S open -S openat -S truncate -S ftruncate -F exit=-EACCES -F auid>=1000 -F auid!=4294967295 -k access'
+      - '-a always,exit -F arch=b64 -S creat -S open -S openat -S truncate -S ftruncate -F exit=-EPERM -F auid>=1000 -F auid!=4294967295 -k access'
+      - '-a always,exit -F arch=b32 -S creat -S open -S openat -S truncate -S ftruncate -F exit=-EPERM -F auid>=1000 -F auid!=4294967295 -k access'
+
+  - name: cis-4_1_12
+    weight: 20
+    comment: CIS 4.1.12 - Log use of privileged commands
+    rule: |
+      {% for file in auditbeat_suid_guid_rule_files %}
+      -a always,exit -F path={{ file }} -F perm=x -F auid>=1000 -F auid!=4294967295 -k privileged
+      {% endfor %}
+
+  - name: cis-4_1_13
+    weight: 20
+    comment: CIS 4.1.13 - Log successful file system mounts
+    rule:
+      - '-a always,exit -F arch=b64 -S mount -F auid>=1000 -F auid!=4294967295 -k mounts'
+      - '-a always,exit -F arch=b32 -S mount -F auid>=1000 -F auid!=4294967295 -k mounts'
+
+  - name: cis-4_1_14
+    weight: 20
+    comment: CIS 4.1.14 - Log file deletion Events by User
+    rule:
+      - '-a always,exit -F arch=b64 -S unlink -S unlinkat -S rename -S renameat -F auid>=1000 -F auid!=4294967295 -k delete'
+      - '-a always,exit -F arch=b32 -S unlink -S unlinkat -S rename -S renameat -F auid>=1000 -F auid!=4294967295 -k delete'
+
+  - name: cis-4_1_15
+    weight: 20
+    comment: CIS 4.1.15 - Log changes to sudoers
+    rule:
+      - '-w /etc/sudoers -p wa -k scope'
+      - '-w /etc/sudoers.d/ -p wa -k scope'
+
+  - name: cis-4_1_16
+    weight: 20
+    comment: CIS 4.1.16 - Log sudolog
+    rule:
+      - '-w /var/log/sudo.log -p wa -k actions'
+
+  - name: cis-4_1_17
+    weight: 20
+    comment: CIS 4.1.17 - Log kernel module actions
+    rule:
+      - '-w /sbin/insmod -p x -k modules'
+      - '-w /sbin/rmmod -p x -k modules'
+      - '-w /sbin/modprobe -p x -k modules'
+      - '-a always,exit -F arch=b64 -S init_module -S delete_module -k modules'
+
+# @var auditbeat_group_rules:description: List of group rules, merged with auditbeat_default_rules
+auditbeat_group_rules: []
+
+# @var auditbeat_host_rules:description: List of host rules, merged with auditbeat_default_rules
+auditbeat_host_rules: []
+
+# @var auditbeat_default_modules:description: List of default modules, gets directly transformed to yaml
+auditbeat_default_modules:
+  - module: auditd
+    audit_rule_files:
+      - "{{ auditbeat_rules_path }}/*.conf"
+
+  - module: file_integrity
+    paths:
+      - /bin
+      - /usr/bin
+      - /sbin
+      - /usr/sbin
+      - /etc
+
+  - module: system
+    datasets:
+      - package
+    period: 10m
+
+  - module: system
+    datasets:
+      - host
+      - login
+      - process
+      - socket
+      - user
+    state.period: 12h
+    user.detect_password_changes: true
+    login.wtmp_file_pattern: /var/log/wtmp*
+    login.btmp_file_pattern: /var/log/btmp*
+
+# @var auditbeat_group_modules:description: List of group modules, merged with auditbeat_default_modules
+auditbeat_group_modules: []
+
+# @var auditbeat_host_modules:description: List of host modules, merged with auditbeat_default_modules
+auditbeat_host_modules: []
+
+# @var auditbeat_default_processors:description: List of default processors, gets directly transformed to yaml
+auditbeat_default_processors:
+  - add_host_metadata: ~
+  - add_cloud_metadata: ~
+  - add_docker_metadata: ~
+
+# @var auditbeat_group_processors:description: List of group processors, merged with auditbeat_default_processors
+auditbeat_group_processors: []
+
+# @var auditbeat_host_processors:description: List of group processors, merged with auditbeat_default_processors
+auditbeat_host_processors: []
+
+# @var auditbeat_service_enabled:description: Enable the logstash output
+auditbeat_logstash_enabled: True
+
+# @var auditbeat_service_enabled:description: List of hosts for logstash output
+auditbeat_logstash_hosts: []
+
+# @var auditbeat_service_enabled:description: Enable the console output
+auditbeat_console_enabled: False
+
+# @var auditbeat_logging_level:description: Define logging level
+auditbeat_logging_level: info
+
+# @var auditbeat_logging_selectors:description: Define logging selectors, like beat, publish, service
+auditbeat_logging_selectors: []
 
 ...

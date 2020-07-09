@@ -1,8 +1,5 @@
 ---
 - name: Converge
   hosts: all
-  vars:
-    auditbeat_service_state: started
-    auditbeat_service_enabled: True
   roles:
     - role: auditbeat
