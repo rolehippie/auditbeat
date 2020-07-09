@@ -1,7 +1,6 @@
 # Standards: 0.1
 ---
 - name: Restart auditbeat
-  when: auditbeat_service_state == 'started' and auditbeat_service_enabled
   systemd:
     name: auditbeat
     state: restarted

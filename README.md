@@ -7,7 +7,6 @@ Ansible role to configure auditbeat
 ## Table of content
 
 * [Default Variables](#default-variables)
-  * [auditbeat_configuration_enabled](#auditbeat_configuration_enabled)
   * [auditbeat_console_enabled](#auditbeat_console_enabled)
   * [auditbeat_default_modules](#auditbeat_default_modules)
   * [auditbeat_default_processors](#auditbeat_default_processors)
@@ -26,7 +25,6 @@ Ansible role to configure auditbeat
   * [auditbeat_name](#auditbeat_name)
   * [auditbeat_rules_path](#auditbeat_rules_path)
   * [auditbeat_service_enabled](#auditbeat_service_enabled)
-  * [auditbeat_service_state](#auditbeat_service_state)
   * [auditbeat_suid_guid_rule_enabled](#auditbeat_suid_guid_rule_enabled)
   * [auditbeat_suid_guid_rule_files](#auditbeat_suid_guid_rule_files)
   * [auditbeat_tags](#auditbeat_tags)
@@ -37,16 +35,6 @@ Ansible role to configure auditbeat
 ---
 
 ## Default Variables
-
-### auditbeat_configuration_enabled
-
-Enable configuration of the service at all
-
-#### Default value
-
-```YAML
-auditbeat_configuration_enabled: true
-```
 
 ### auditbeat_console_enabled
 
@@ -394,22 +382,6 @@ auditbeat_rules_path: /etc/auditbeat/audit.rules.d
 ### auditbeat_service_enabled
 
 Enable the console output
-
-#### Default value
-
-```YAML
-auditbeat_service_enabled: true
-```
-
-### auditbeat_service_state
-
-State for the service definition
-
-#### Default value
-
-```YAML
-auditbeat_service_state: started
-```
 
 ### auditbeat_suid_guid_rule_enabled
 

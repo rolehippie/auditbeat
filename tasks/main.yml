@@ -26,80 +26,75 @@
   tags:
     - auditbeat
 
-- name: Apply general configuration
-  when: auditbeat_configuration_enabled
-  block:
-    - name: Detect suid/guid files
-      when:
-        - auditbeat_suid_guid_rule_enabled
-        - auditbeat_suid_guid_rule_files | length == 0
-      register: auditbeat_suid_guid_rule_exec
-      changed_when: False
-      command: find / -xdev \( -perm -4000 -o -perm -2000 \) -type f
-      tags:
-        - auditbeat
+- name: Detect suid/guid files
+  when:
+    - auditbeat_suid_guid_rule_enabled
+    - auditbeat_suid_guid_rule_files | length == 0
+  register: auditbeat_suid_guid_rule_exec
+  changed_when: False
+  command: find / -xdev \( -perm -4000 -o -perm -2000 \) -type f
+  tags:
+    - auditbeat
 
-    - name: Fact suid/guid files
-      when:
-        - auditbeat_suid_guid_rule_enabled
-        - auditbeat_suid_guid_rule_files | length == 0
-      set_fact:
-        auditbeat_suid_guid_rule_files: "{{ auditbeat_suid_guid_rule_exec.stdout_lines }}"
-      tags:
-        - auditbeat
+- name: Fact suid/guid files
+  when:
+    - auditbeat_suid_guid_rule_enabled
+    - auditbeat_suid_guid_rule_files | length == 0
+  set_fact:
+    auditbeat_suid_guid_rule_files: "{{ auditbeat_suid_guid_rule_exec.stdout_lines }}"
+  tags:
+    - auditbeat
 
-    - name: Drop reference config
-      file:
-        path: /etc/auditbeat/auditbeat.reference.yml
-        state: absent
-      tags:
-        - auditbeat
+- name: Drop reference config
+  file:
+    path: /etc/auditbeat/auditbeat.reference.yml
+    state: absent
+  tags:
+    - auditbeat
 
-    - name: Write rules config
-      notify:
-        - Restart auditbeat
-      loop: "{{ auditbeat_default_rules + auditbeat_group_rules + auditbeat_host_rules }}"
-      loop_control:
-        label: "{{ item.name }}"
-      when: item.state | default('present') == 'present'
-      template:
-        src: rules.j2
-        dest: "{{ auditbeat_rules_path }}/{{ item.weight | default('10') }}_{{ item.name }}.conf"
-      tags:
-        - auditbeat
+- name: Write rules config
+  notify:
+    - Restart auditbeat
+  loop: "{{ auditbeat_default_rules + auditbeat_group_rules + auditbeat_host_rules }}"
+  loop_control:
+    label: "{{ item.name }}"
+  when: item.state | default('present') == 'present'
+  template:
+    src: rules.j2
+    dest: "{{ auditbeat_rules_path }}/{{ item.weight | default('10') }}_{{ item.name }}.conf"
+  tags:
+    - auditbeat
 
-    - name: Drop rules config
-      notify:
-        - Restart auditbeat
-      loop: "{{ auditbeat_default_rules + auditbeat_group_rules + auditbeat_host_rules }}"
-      loop_control:
-        label: "{{ item.name }}"
-      when: item.state | default('present') == 'absent'
-      file:
-        path: "{{ auditbeat_rules_path }}/{{ item.weight | default('10') }}_{{ item.name }}.conf"
-        state: absent
-      tags:
-        - auditbeat
+- name: Drop rules config
+  notify:
+    - Restart auditbeat
+  loop: "{{ auditbeat_default_rules + auditbeat_group_rules + auditbeat_host_rules }}"
+  loop_control:
+    label: "{{ item.name }}"
+  when: item.state | default('present') == 'absent'
+  file:
+    path: "{{ auditbeat_rules_path }}/{{ item.weight | default('10') }}_{{ item.name }}.conf"
+    state: absent
+  tags:
+    - auditbeat
 
-    - name: Write general config
-      notify:
-        - Restart auditbeat
-      template:
-        src: config.j2
-        dest: /etc/auditbeat/auditbeat.yml
-        validate: auditbeat test config -d -c %s
-      tags:
-        - auditbeat
+- name: Write general config
+  notify:
+    - Restart auditbeat
+  template:
+    src: config.j2
+    dest: /etc/auditbeat/auditbeat.yml
+    validate: auditbeat test config -d -c %s
   tags:
     - auditbeat
 
 - name: Start auditbeat service
   systemd:
     name: auditbeat
-    state: "{{ auditbeat_service_state }}"
+    state: started
     daemon_reload: True
     masked: False
-    enabled: "{{ auditbeat_service_enabled }}"
+    enabled: True
   tags:
     - auditbeat
 
