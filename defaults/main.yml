@@ -214,7 +214,7 @@ auditbeat_default_modules:
       - socket
       - user
     state.period: 12h
-    user.detect_password_changes: true
+    user.detect_password_changes: True
     login.wtmp_file_pattern: /var/log/wtmp*
     login.btmp_file_pattern: /var/log/btmp*
 
