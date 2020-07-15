@@ -202,6 +202,8 @@ auditbeat_default_rules:
     rule: "{% for file in auditbeat_suid_guid_rule_files %}\n-a always,exit -F path={{\
       \ file }} -F perm=x -F auid>=1000 -F auid!=4294967295 -k privileged\n{% endfor\
       \ %}\n"
+    state: "{{ 'present' if auditbeat_suid_guid_rule_files | length > 0 else 'absent'\
+      \ }}"
   - name: cis-4_1_13
     weight: 20
     comment: CIS 4.1.13 - Log successful file system mounts
@@ -390,7 +392,7 @@ Search suid/guid programs on disk
 #### Default value
 
 ```YAML
-auditbeat_suid_guid_rule_enabled: true
+auditbeat_suid_guid_rule_enabled: false
 ```
 
 ### auditbeat_suid_guid_rule_files

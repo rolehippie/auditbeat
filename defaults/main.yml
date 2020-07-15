@@ -13,7 +13,7 @@ auditbeat_tags: []
 auditbeat_rules_path: /etc/auditbeat/audit.rules.d
 
 # @var auditbeat_suid_guid_rule_enabled:description: Search suid/guid programs on disk
-auditbeat_suid_guid_rule_enabled: True
+auditbeat_suid_guid_rule_enabled: False
 
 # @var auditbeat_suid_guid_rule_files:description: Define a default list of suid/guid files
 auditbeat_suid_guid_rule_files: []
@@ -135,6 +135,7 @@ auditbeat_default_rules:
       {% for file in auditbeat_suid_guid_rule_files %}
       -a always,exit -F path={{ file }} -F perm=x -F auid>=1000 -F auid!=4294967295 -k privileged
       {% endfor %}
+    state: "{{ 'present' if auditbeat_suid_guid_rule_files | length > 0 else 'absent' }}"
 
   - name: cis-4_1_13
     weight: 20
