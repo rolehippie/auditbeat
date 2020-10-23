@@ -1,7 +1,7 @@
 ---
 repository:
   name: auditbeat
-  description: Ansible role for auditbeat
+  description: Ansible role to install and configure auditbeat
   topics: ansible, role, ansible-role
 
   private: false

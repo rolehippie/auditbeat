@@ -1,8 +1,14 @@
 # auditbeat
 
-[![Build Status](https://cloud.drone.io/api/badges/rolehippie/auditbeat/status.svg)](https://cloud.drone.io/rolehippie/auditbeat)
+[![Source Code](https://img.shields.io/badge/github-source%20code-blue?logo=github&logoColor=white)](https://github.com/rolehippie/auditbeat) [![Build Status](https://img.shields.io/drone/build/rolehippie/auditbeat/master?logo=drone)](https://cloud.drone.io/rolehippie/auditbeat) [![License: Apache-2.0](https://img.shields.io/github/license/rolehippie/auditbeat)](https://github.com/rolehippie/auditbeat/blob/master/LICENSE) 
 
-Ansible role to configure auditbeat
+Ansible role to install and configure auditbeat. 
+
+## Sponsor 
+
+[![Proact Deutschland GmbH](https://proact.eu/wp-content/uploads/2020/03/proact-logo.png)](https://proact.eu) 
+
+Building and improving this Ansible role have been sponsored by my employer **Proact Deutschland GmbH**.
 
 ## Table of content
 
