@@ -2,6 +2,9 @@
 ---
 - name: Converge
   hosts: all
+  vars:
+    auditbeat_logstash_enabled: False
+    auditbeat_console_enabled: True
   roles:
     - role: auditbeat
 
