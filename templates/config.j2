@@ -2,11 +2,11 @@ name: {{ auditbeat_name }}
 tags: {{ auditbeat_tags | to_yaml | trim }}
 
 auditbeat.modules:
-  {{ (auditbeat_default_modules + auditbeat_group_modules + auditbeat_host_modules) | to_nice_yaml(indent=2) | indent(width=2, indentfirst=False) | trim }}
+  {{ (auditbeat_default_modules + auditbeat_group_modules + auditbeat_host_modules) | to_nice_yaml(indent=2) | indent(width=2, first=False) | trim }}
 {% if (auditbeat_default_processors + auditbeat_group_processors + auditbeat_host_processors) | length > 0 %}
 
 processors:
-  {{ (auditbeat_default_processors + auditbeat_group_processors + auditbeat_host_processors) | to_nice_yaml(indent=2) | indent(width=2, indentfirst=False) | trim }}
+  {{ (auditbeat_default_processors + auditbeat_group_processors + auditbeat_host_processors) | to_nice_yaml(indent=2) | indent(width=2, first=False) | trim }}
 {% endif %}
 
 output.logstash:
