@@ -62,6 +62,9 @@
   template:
     src: rules.j2
     dest: "{{ auditbeat_rules_path }}/{{ item.weight | default('10') }}_{{ item.name }}.conf"
+    owner: root
+    group: root
+    mode: u=rw,g=r,o=r
   tags:
     - auditbeat
 
@@ -85,6 +88,9 @@
     src: config.j2
     dest: /etc/auditbeat/auditbeat.yml
     validate: auditbeat test config -d -c %s
+    owner: root
+    group: root
+    mode: u=rw,g=r,o=r
   tags:
     - auditbeat
 
