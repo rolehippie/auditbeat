@@ -1,42 +1,43 @@
 # auditbeat
 
-[![Source Code](https://img.shields.io/badge/github-source%20code-blue?logo=github&logoColor=white)](https://github.com/rolehippie/auditbeat) [![Testing Build](https://github.com/rolehippie/auditbeat/workflows/testing/badge.svg)](https://github.com/rolehippie/auditbeat/actions?query=workflow%3Atesting) [![Readme Build](https://github.com/rolehippie/auditbeat/workflows/readme/badge.svg)](https://github.com/rolehippie/auditbeat/actions?query=workflow%3Areadme) [![Galaxy Build](https://github.com/rolehippie/auditbeat/workflows/galaxy/badge.svg)](https://github.com/rolehippie/auditbeat/actions?query=workflow%3Agalaxy) [![License: Apache-2.0](https://img.shields.io/github/license/rolehippie/auditbeat)](https://github.com/rolehippie/auditbeat/blob/master/LICENSE) 
+[![Source Code](https://img.shields.io/badge/github-source%20code-blue?logo=github&logoColor=white)](https://github.com/rolehippie/auditbeat) [![Testing Build](https://github.com/rolehippie/auditbeat/workflows/testing/badge.svg)](https://github.com/rolehippie/auditbeat/actions?query=workflow%3Atesting) [![Readme Build](https://github.com/rolehippie/auditbeat/workflows/readme/badge.svg)](https://github.com/rolehippie/auditbeat/actions?query=workflow%3Areadme) [![Galaxy Build](https://github.com/rolehippie/auditbeat/workflows/galaxy/badge.svg)](https://github.com/rolehippie/auditbeat/actions?query=workflow%3Agalaxy) [![License: Apache-2.0](https://img.shields.io/github/license/rolehippie/auditbeat)](https://github.com/rolehippie/auditbeat/blob/master/LICENSE)
 
-Ansible role to install and configure auditbeat. 
+Ansible role to install and configure auditbeat.
 
-## Sponsor 
+## Sponsor
 
-[![Proact Deutschland GmbH](https://proact.eu/wp-content/uploads/2020/03/proact-logo.png)](https://proact.eu) 
+[![Proact Deutschland GmbH](https://proact.eu/wp-content/uploads/2020/03/proact-logo.png)](https://proact.eu)
 
 Building and improving this Ansible role have been sponsored by my employer **Proact Deutschland GmbH**.
 
 ## Table of content
 
-* [Default Variables](#default-variables)
-  * [auditbeat_console_enabled](#auditbeat_console_enabled)
-  * [auditbeat_default_modules](#auditbeat_default_modules)
-  * [auditbeat_default_processors](#auditbeat_default_processors)
-  * [auditbeat_default_rules](#auditbeat_default_rules)
-  * [auditbeat_group_modules](#auditbeat_group_modules)
-  * [auditbeat_group_processors](#auditbeat_group_processors)
-  * [auditbeat_group_rules](#auditbeat_group_rules)
-  * [auditbeat_host_modules](#auditbeat_host_modules)
-  * [auditbeat_host_processors](#auditbeat_host_processors)
-  * [auditbeat_host_rules](#auditbeat_host_rules)
-  * [auditbeat_logging_level](#auditbeat_logging_level)
-  * [auditbeat_logging_selectors](#auditbeat_logging_selectors)
-  * [auditbeat_logstash_enabled](#auditbeat_logstash_enabled)
-  * [auditbeat_logstash_hosts](#auditbeat_logstash_hosts)
-  * [auditbeat_major_version](#auditbeat_major_version)
-  * [auditbeat_name](#auditbeat_name)
-  * [auditbeat_rules_path](#auditbeat_rules_path)
-  * [auditbeat_service_enabled](#auditbeat_service_enabled)
-  * [auditbeat_suid_guid_rule_enabled](#auditbeat_suid_guid_rule_enabled)
-  * [auditbeat_suid_guid_rule_files](#auditbeat_suid_guid_rule_files)
-  * [auditbeat_tags](#auditbeat_tags)
-* [Dependencies](#dependencies)
-* [License](#license)
-* [Author](#author)
+- [Default Variables](#default-variables)
+  - [auditbeat_console_enabled](#auditbeat_console_enabled)
+  - [auditbeat_default_modules](#auditbeat_default_modules)
+  - [auditbeat_default_processors](#auditbeat_default_processors)
+  - [auditbeat_default_rules](#auditbeat_default_rules)
+  - [auditbeat_group_modules](#auditbeat_group_modules)
+  - [auditbeat_group_processors](#auditbeat_group_processors)
+  - [auditbeat_group_rules](#auditbeat_group_rules)
+  - [auditbeat_host_modules](#auditbeat_host_modules)
+  - [auditbeat_host_processors](#auditbeat_host_processors)
+  - [auditbeat_host_rules](#auditbeat_host_rules)
+  - [auditbeat_logging_level](#auditbeat_logging_level)
+  - [auditbeat_logging_selectors](#auditbeat_logging_selectors)
+  - [auditbeat_logstash_enabled](#auditbeat_logstash_enabled)
+  - [auditbeat_logstash_hosts](#auditbeat_logstash_hosts)
+  - [auditbeat_major_version](#auditbeat_major_version)
+  - [auditbeat_name](#auditbeat_name)
+  - [auditbeat_rules_path](#auditbeat_rules_path)
+  - [auditbeat_service_enabled](#auditbeat_service_enabled)
+  - [auditbeat_suid_guid_rule_enabled](#auditbeat_suid_guid_rule_enabled)
+  - [auditbeat_suid_guid_rule_files](#auditbeat_suid_guid_rule_files)
+  - [auditbeat_tags](#auditbeat_tags)
+- [Discovered Tags](#discovered-tags)
+- [Dependencies](#dependencies)
+- [License](#license)
+- [Author](#author)
 
 ---
 
@@ -205,9 +206,10 @@ auditbeat_default_rules:
   - name: cis-4_1_12
     weight: 20
     comment: CIS 4.1.12 - Log use of privileged commands
-    rule: "{% for file in auditbeat_suid_guid_rule_files %}\n-a always,exit -F path={{\
-      \ file }} -F perm=x -F auid>=1000 -F auid!=4294967295 -k privileged\n{% endfor\
-      \ %}\n"
+    rule: |
+      {% for file in auditbeat_suid_guid_rule_files %}
+      -a always,exit -F path={{ file }} -F perm=x -F auid>=1000 -F auid!=4294967295 -k privileged
+      {% endfor %}
     state: "{{ 'present' if auditbeat_suid_guid_rule_files | length > 0 else 'absent'\
       \ }}"
   - name: cis-4_1_13
@@ -421,9 +423,14 @@ List of tags to assign for the shipper
 auditbeat_tags: []
 ```
 
+## Discovered Tags
+
+**_auditbeat_**
+
+
 ## Dependencies
 
-* None
+- None
 
 ## License
 
