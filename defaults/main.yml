@@ -1,7 +1,7 @@
 # Standards: 1.2
 ---
 # @var auditbeat_major_version:description: Major version to install, used for the APT repository
-auditbeat_major_version: 7
+auditbeat_major_version: 8
 
 # @var auditbeat_name:description: Name of the shipper within the output
 auditbeat_name: "{{ ansible_hostname }}"
