@@ -1,6 +1,6 @@
 # auditbeat
 
-[![Source Code](https://img.shields.io/badge/github-source%20code-blue?logo=github&logoColor=white)](https://github.com/rolehippie/auditbeat) [![Testing Build](https://github.com/rolehippie/auditbeat/workflows/testing/badge.svg)](https://github.com/rolehippie/auditbeat/actions?query=workflow%3Atesting) [![Readme Build](https://github.com/rolehippie/auditbeat/workflows/readme/badge.svg)](https://github.com/rolehippie/auditbeat/actions?query=workflow%3Areadme) [![Galaxy Build](https://github.com/rolehippie/auditbeat/workflows/galaxy/badge.svg)](https://github.com/rolehippie/auditbeat/actions?query=workflow%3Agalaxy) [![License: Apache-2.0](https://img.shields.io/github/license/rolehippie/auditbeat)](https://github.com/rolehippie/auditbeat/blob/master/LICENSE)
+[![Source Code](https://img.shields.io/badge/github-source%20code-blue?logo=github&logoColor=white)](https://github.com/rolehippie/auditbeat) [![General Workflow](https://github.com/rolehippie/auditbeat/actions/workflows/general.yml/badge.svg)](https://github.com/rolehippie/auditbeat/actions/workflows/general.yml) [![Readme Workflow](https://github.com/rolehippie/auditbeat/actions/workflows/readme.yml/badge.svg)](https://github.com/rolehippie/auditbeat/actions/workflows/readme.yml) [![Galaxy Workflow](https://github.com/rolehippie/auditbeat/actions/workflows/galaxy.yml/badge.svg)](https://github.com/rolehippie/auditbeat/actions/workflows/galaxy.yml) [![License: Apache-2.0](https://img.shields.io/github/license/rolehippie/auditbeat)](https://github.com/rolehippie/auditbeat/blob/master/LICENSE)
 
 Ansible role to install and configure auditbeat.
 
@@ -32,6 +32,7 @@ Building and improving this Ansible role have been sponsored by my current and p
   - [auditbeat_suid_guid_rule_enabled](#auditbeat_suid_guid_rule_enabled)
   - [auditbeat_suid_guid_rule_files](#auditbeat_suid_guid_rule_files)
   - [auditbeat_tags](#auditbeat_tags)
+  - [auditbeat_test_config_command](#auditbeat_test_config_command)
 - [Discovered Tags](#discovered-tags)
 - [Dependencies](#dependencies)
 - [License](#license)
@@ -419,6 +420,16 @@ List of tags to assign for the shipper
 
 ```YAML
 auditbeat_tags: []
+```
+
+### auditbeat_test_config_command
+
+Command to test the configuration
+
+#### Default value
+
+```YAML
+auditbeat_test_config_command: auditbeat test config -d -c %s
 ```
 
 ## Discovered Tags

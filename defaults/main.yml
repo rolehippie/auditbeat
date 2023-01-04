@@ -243,4 +243,7 @@ auditbeat_logging_level: info
 # @var auditbeat_logging_selectors:description: Define logging selectors, like beat, publish, service
 auditbeat_logging_selectors: []
 
+# @var auditbeat_test_config_command:description: Command to test the configuration
+auditbeat_test_config_command: auditbeat test config -d -c %s
+
 ...

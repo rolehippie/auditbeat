@@ -5,7 +5,8 @@
   vars:
     auditbeat_logstash_enabled: False
     auditbeat_console_enabled: True
+    auditbeat_test_config_command: ~
   roles:
-    - role: auditbeat
+    - role: rolehippie.auditbeat
 
 ...
