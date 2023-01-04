@@ -6,6 +6,23 @@
     auditbeat_logstash_enabled: False
     auditbeat_console_enabled: True
     auditbeat_test_config_command: ~
+    auditbeat_default_rules:
+      - name: current-dir
+        comment: Ignore current working directory records
+        rule:
+          - '-a always,exclude -F msgtype=CWD'
+      - name: ignore-eoe
+        comment: Ignore EOE records (End Of Event, not needed)
+        rule:
+          - '-a always,exclude -F msgtype=EOE'
+    auditbeat_default_modules:
+      - module: file_integrity
+        paths:
+          - /bin
+          - /usr/bin
+          - /sbin
+          - /usr/sbin
+          - /etc
   roles:
     - role: rolehippie.auditbeat
 
