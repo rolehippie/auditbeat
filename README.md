@@ -365,7 +365,7 @@ Major version to install, used for the APT repository
 #### Default value
 
 ```YAML
-auditbeat_major_version: 7
+auditbeat_major_version: 8
 ```
 
 ### auditbeat_name
