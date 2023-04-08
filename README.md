@@ -1,6 +1,11 @@
 # auditbeat
 
-[![Source Code](https://img.shields.io/badge/github-source%20code-blue?logo=github&logoColor=white)](https://github.com/rolehippie/auditbeat) [![General Workflow](https://github.com/rolehippie/auditbeat/actions/workflows/general.yml/badge.svg)](https://github.com/rolehippie/auditbeat/actions/workflows/general.yml) [![Readme Workflow](https://github.com/rolehippie/auditbeat/actions/workflows/readme.yml/badge.svg)](https://github.com/rolehippie/auditbeat/actions/workflows/readme.yml) [![Galaxy Workflow](https://github.com/rolehippie/auditbeat/actions/workflows/galaxy.yml/badge.svg)](https://github.com/rolehippie/auditbeat/actions/workflows/galaxy.yml) [![License: Apache-2.0](https://img.shields.io/github/license/rolehippie/auditbeat)](https://github.com/rolehippie/auditbeat/blob/master/LICENSE) [![Ansible Role](https://img.shields.io/ansible/role/51464)](https://galaxy.ansible.com/rolehippie/auditbeat)
+[![Source Code](https://img.shields.io/badge/github-source%20code-blue?logo=github&amp;logoColor=white)](https://github.com/rolehippie/auditbeat)
+[![General Workflow](https://github.com/rolehippie/auditbeat/actions/workflows/general.yml/badge.svg)](https://github.com/rolehippie/auditbeat/actions/workflows/general.yml)
+[![Readme Workflow](https://github.com/rolehippie/auditbeat/actions/workflows/readme.yml/badge.svg)](https://github.com/rolehippie/auditbeat/actions/workflows/readme.yml)
+[![Galaxy Workflow](https://github.com/rolehippie/auditbeat/actions/workflows/galaxy.yml/badge.svg)](https://github.com/rolehippie/auditbeat/actions/workflows/galaxy.yml)
+[![License: Apache-2.0](https://img.shields.io/github/license/rolehippie/auditbeat)](https://github.com/rolehippie/auditbeat/blob/master/LICENSE)
+[![Ansible Role](https://img.shields.io/badge/role-rolehippie.auditbeat-blue)](https://galaxy.ansible.com/rolehippie/auditbeat)
 
 Ansible role to install and configure auditbeat.
 
