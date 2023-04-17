@@ -246,4 +246,7 @@ auditbeat_logging_selectors: []
 # @var auditbeat_test_config_command:description: Command to test the configuration
 auditbeat_test_config_command: auditbeat test config -d -c %s
 
+# @var auditbeat_keyring:description: Path for the repository keyring
+auditbeat_keyring: /usr/share/keyrings/elastic-archive-keyring.gpg
+
 ...
