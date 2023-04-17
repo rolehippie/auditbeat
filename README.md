@@ -27,6 +27,7 @@ Building and improving this Ansible role have been sponsored by my current and p
   - [auditbeat_host_modules](#auditbeat_host_modules)
   - [auditbeat_host_processors](#auditbeat_host_processors)
   - [auditbeat_host_rules](#auditbeat_host_rules)
+  - [auditbeat_keyring](#auditbeat_keyring)
   - [auditbeat_logging_level](#auditbeat_logging_level)
   - [auditbeat_logging_selectors](#auditbeat_logging_selectors)
   - [auditbeat_logstash_enabled](#auditbeat_logstash_enabled)
@@ -331,6 +332,16 @@ List of host rules, merged with auditbeat_default_rules
 
 ```YAML
 auditbeat_host_rules: []
+```
+
+### auditbeat_keyring
+
+Path for the repository keyring
+
+#### Default value
+
+```YAML
+auditbeat_keyring: /usr/share/keyrings/elastic-archive-keyring.gpg
 ```
 
 ### auditbeat_logging_level
