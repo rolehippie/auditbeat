@@ -1,6 +1,6 @@
 # auditbeat
 
-[![Source Code](https://img.shields.io/badge/github-source%20code-blue?logo=github&amp;logoColor=white)](https://github.com/rolehippie/auditbeat)
+[![Source Code](https://img.shields.io/badge/github-source%20code-blue?logo=github&logoColor=white)](https://github.com/rolehippie/auditbeat)
 [![General Workflow](https://github.com/rolehippie/auditbeat/actions/workflows/general.yml/badge.svg)](https://github.com/rolehippie/auditbeat/actions/workflows/general.yml)
 [![Readme Workflow](https://github.com/rolehippie/auditbeat/actions/workflows/docs.yml/badge.svg)](https://github.com/rolehippie/auditbeat/actions/workflows/docs.yml)
 [![Galaxy Workflow](https://github.com/rolehippie/auditbeat/actions/workflows/galaxy.yml/badge.svg)](https://github.com/rolehippie/auditbeat/actions/workflows/galaxy.yml)
@@ -50,7 +50,6 @@ Building and improving this Ansible role have been sponsored by my current and p
 ## Requirements
 
 - Minimum Ansible version: `2.10`
-
 
 ## Default Variables
 
@@ -221,8 +220,8 @@ auditbeat_default_rules:
       {% for file in auditbeat_suid_guid_rule_files %}
       -a always,exit -F path={{ file }} -F perm=x -F auid>=1000 -F auid!=4294967295 -k privileged
       {% endfor %}
-    state: "{{ 'present' if auditbeat_suid_guid_rule_files | length > 0 else 'absent'\
-      \ }}"
+    state: "{{ 'present' if auditbeat_suid_guid_rule_files | length > 0 else 'absent'
+      }}"
   - name: cis-4_1_13
     weight: 20
     comment: CIS 4.1.13 - Log successful file system mounts
