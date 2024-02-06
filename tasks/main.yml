@@ -1,13 +1,13 @@
 ---
 - name: Remove legacy key
-  apt_key:
+  ansible.builtin.apt_key:
     id: 46095ACC8548582C1A2699A9D27D666CD88E42B4
     state: absent
   tags:
     - auditbeat
 
 - name: Remove legacy repo
-  apt_repository:
+  ansible.builtin.apt_repository:
     repo: "deb https://artifacts.elastic.co/packages/{{ auditbeat_major_version }}.x/apt stable main"
     filename: elastic
     update_cache: False
@@ -16,14 +16,14 @@
     - auditbeat
 
 - name: Download repo key
-  shell:
+  ansible.builtin.shell:
     cmd: "curl -sSL 'https://artifacts.elastic.co/GPG-KEY-elasticsearch' | gpg --dearmor --output {{ auditbeat_keyring }}"
     creates: "{{ auditbeat_keyring }}"
   tags:
     - auditbeat
 
 - name: Add apt repository
-  apt_repository:
+  ansible.builtin.apt_repository:
     repo: "deb [signed-by={{ auditbeat_keyring }}] https://artifacts.elastic.co/packages/{{ auditbeat_major_version }}.x/apt stable main"
     filename: elastic
     update_cache: True
@@ -34,7 +34,7 @@
 - name: Install required packages
   loop:
     - auditbeat
-  package:
+  ansible.builtin.package:
     name: "{{ item }}"
     state: present
   tags:
@@ -46,7 +46,7 @@
     - auditbeat_suid_guid_rule_files | length == 0
   register: auditbeat_suid_guid_rule_exec
   changed_when: False
-  command: find / -xdev \( -perm -4000 -o -perm -2000 \) -type f
+  ansible.builtin.command: find / -xdev \( -perm -4000 -o -perm -2000 \) -type f
   tags:
     - auditbeat
 
@@ -54,13 +54,13 @@
   when:
     - auditbeat_suid_guid_rule_enabled
     - auditbeat_suid_guid_rule_files | length == 0
-  set_fact:
+  ansible.builtin.set_fact:
     auditbeat_suid_guid_rule_files: "{{ auditbeat_suid_guid_rule_exec.stdout_lines }}"
   tags:
     - auditbeat
 
 - name: Drop reference config
-  file:
+  ansible.builtin.file:
     path: /etc/auditbeat/auditbeat.reference.yml
     state: absent
   tags:
@@ -73,7 +73,7 @@
   loop_control:
     label: "{{ item.name }}"
   when: item.state | default('present') == 'present'
-  template:
+  ansible.builtin.template:
     src: rules.j2
     dest: "{{ auditbeat_rules_path }}/{{ item.weight | default('10') }}_{{ item.name }}.conf"
     owner: root
@@ -89,7 +89,7 @@
   loop_control:
     label: "{{ item.name }}"
   when: item.state | default('present') == 'absent'
-  file:
+  ansible.builtin.file:
     path: "{{ auditbeat_rules_path }}/{{ item.weight | default('10') }}_{{ item.name }}.conf"
     state: absent
   tags:
@@ -98,7 +98,7 @@
 - name: Write general config
   notify:
     - Restart auditbeat
-  template:
+  ansible.builtin.template:
     src: config.j2
     dest: /etc/auditbeat/auditbeat.yml
     validate: "{{ auditbeat_test_config_command }}"
@@ -109,7 +109,7 @@
     - auditbeat
 
 - name: Start auditbeat service
-  systemd:
+  ansible.builtin.systemd:
     name: auditbeat
     state: started
     daemon_reload: True
