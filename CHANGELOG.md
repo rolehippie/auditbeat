@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.0.0](https://github.com/rolehippie/auditbeat/compare/v1.1.0...v2.0.0) (2024-02-12)
+
+
+### Features
+
+* drop support for ubuntu 18.04 ([64ae551](https://github.com/rolehippie/auditbeat/commit/64ae5510aa87378a5ca2d3732cd214dabc72709f))
+* used full qualified collection names ([8a93395](https://github.com/rolehippie/auditbeat/commit/8a93395b0d8e69acf8818cde5fceab4b3431253a))
+
 ## [1.1.0](https://github.com/rolehippie/auditbeat/compare/v1.0.0...v1.1.0) (2023-04-17)
 
 
