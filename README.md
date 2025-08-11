@@ -1,4 +1,4 @@
-# auditbeat
+# workspace
 
 [![Source Code](https://img.shields.io/badge/github-source%20code-blue?logo=github&logoColor=white)](https://github.com/rolehippie/auditbeat)
 [![General Workflow](https://github.com/rolehippie/auditbeat/actions/workflows/general.yml/badge.svg)](https://github.com/rolehippie/auditbeat/actions/workflows/general.yml)
@@ -142,7 +142,8 @@ auditbeat_default_rules:
     comment: CIS 4.1.4 - Changes to the time
     rule:
       - -a always,exit -F arch=b64 -S adjtimex -S settimeofday -k time-change
-      - -a always,exit -F arch=b32 -S adjtimex -S settimeofday -S stime -k time-change
+      - -a always,exit -F arch=b32 -S adjtimex -S settimeofday -S stime -k 
+        time-change
       - -a always,exit -F arch=b64 -S clock_settime -k time-change
       - -a always,exit -F arch=b32 -S clock_settime -k time-change
       - -w /etc/localtime -p wa -k time-change
@@ -159,8 +160,10 @@ auditbeat_default_rules:
     weight: 20
     comment: CIS 4.1.6 - Changes to the network environment
     rule:
-      - -a exit,always -F arch=b64 -S sethostname -S setdomainname -k system-locale
-      - -a exit,always -F arch=b32 -S sethostname -S setdomainname -k system-locale
+      - -a exit,always -F arch=b64 -S sethostname -S setdomainname -k 
+        system-locale
+      - -a exit,always -F arch=b32 -S sethostname -S setdomainname -k 
+        system-locale
       - -w /etc/issue -p wa -k system-locale
       - -w /etc/issue.net -p wa -k system-locale
       - -w /etc/hosts -p wa -k system-locale
@@ -189,30 +192,32 @@ auditbeat_default_rules:
     weight: 20
     comment: CIS 4.1.10 - Log Discretionary Access Control modifications
     rule:
-      - -a always,exit -F arch=b64 -S chmod -S fchmod -S fchmodat -F auid>=1000 -F
-        auid!=4294967295 -k perm_mod
-      - -a always,exit -F arch=b32 -S chmod -S fchmod -S fchmodat -F auid>=1000 -F
-        auid!=4294967295 -k perm_mod
-      - -a always,exit -F arch=b64 -S chown -S fchown -S fchownat -S lchown -F auid>=1000
+      - -a always,exit -F arch=b64 -S chmod -S fchmod -S fchmodat -F auid>=1000 
         -F auid!=4294967295 -k perm_mod
-      - -a always,exit -F arch=b32 -S chown -S fchown -S fchownat -S lchown -F auid>=1000
+      - -a always,exit -F arch=b32 -S chmod -S fchmod -S fchmodat -F auid>=1000 
         -F auid!=4294967295 -k perm_mod
-      - -a always,exit -F arch=b64 -S setxattr -S lsetxattr -S fsetxattr -S removexattr
-        -S lremovexattr -S fremovexattr -F auid>=1000 -F auid!=4294967295 -k perm_mod
-      - -a always,exit -F arch=b32 -S setxattr -S lsetxattr -S fsetxattr -S removexattr
-        -S lremovexattr -S fremovexattr -F auid>=1000 -F auid!=4294967295 -k perm_mod
+      - -a always,exit -F arch=b64 -S chown -S fchown -S fchownat -S lchown -F 
+        auid>=1000 -F auid!=4294967295 -k perm_mod
+      - -a always,exit -F arch=b32 -S chown -S fchown -S fchownat -S lchown -F 
+        auid>=1000 -F auid!=4294967295 -k perm_mod
+      - -a always,exit -F arch=b64 -S setxattr -S lsetxattr -S fsetxattr -S 
+        removexattr -S lremovexattr -S fremovexattr -F auid>=1000 -F 
+        auid!=4294967295 -k perm_mod
+      - -a always,exit -F arch=b32 -S setxattr -S lsetxattr -S fsetxattr -S 
+        removexattr -S lremovexattr -S fremovexattr -F auid>=1000 -F 
+        auid!=4294967295 -k perm_mod
   - name: cis-4_1_11
     weight: 20
     comment: CIS 4.1.11 - Log unsuccessful unauthorized file access attempts
     rule:
-      - -a always,exit -F arch=b64 -S creat -S open -S openat -S truncate -S ftruncate
-        -F exit=-EACCES -F auid>=1000 -F auid!=4294967295 -k access
-      - -a always,exit -F arch=b32 -S creat -S open -S openat -S truncate -S ftruncate
-        -F exit=-EACCES -F auid>=1000 -F auid!=4294967295 -k access
-      - -a always,exit -F arch=b64 -S creat -S open -S openat -S truncate -S ftruncate
-        -F exit=-EPERM -F auid>=1000 -F auid!=4294967295 -k access
-      - -a always,exit -F arch=b32 -S creat -S open -S openat -S truncate -S ftruncate
-        -F exit=-EPERM -F auid>=1000 -F auid!=4294967295 -k access
+      - -a always,exit -F arch=b64 -S creat -S open -S openat -S truncate -S 
+        ftruncate -F exit=-EACCES -F auid>=1000 -F auid!=4294967295 -k access
+      - -a always,exit -F arch=b32 -S creat -S open -S openat -S truncate -S 
+        ftruncate -F exit=-EACCES -F auid>=1000 -F auid!=4294967295 -k access
+      - -a always,exit -F arch=b64 -S creat -S open -S openat -S truncate -S 
+        ftruncate -F exit=-EPERM -F auid>=1000 -F auid!=4294967295 -k access
+      - -a always,exit -F arch=b32 -S creat -S open -S openat -S truncate -S 
+        ftruncate -F exit=-EPERM -F auid>=1000 -F auid!=4294967295 -k access
   - name: cis-4_1_12
     weight: 20
     comment: CIS 4.1.12 - Log use of privileged commands
@@ -226,16 +231,18 @@ auditbeat_default_rules:
     weight: 20
     comment: CIS 4.1.13 - Log successful file system mounts
     rule:
-      - -a always,exit -F arch=b64 -S mount -F auid>=1000 -F auid!=4294967295 -k mounts
-      - -a always,exit -F arch=b32 -S mount -F auid>=1000 -F auid!=4294967295 -k mounts
+      - -a always,exit -F arch=b64 -S mount -F auid>=1000 -F auid!=4294967295 -k
+        mounts
+      - -a always,exit -F arch=b32 -S mount -F auid>=1000 -F auid!=4294967295 -k
+        mounts
   - name: cis-4_1_14
     weight: 20
     comment: CIS 4.1.14 - Log file deletion Events by User
     rule:
-      - -a always,exit -F arch=b64 -S unlink -S unlinkat -S rename -S renameat -F
-        auid>=1000 -F auid!=4294967295 -k delete
-      - -a always,exit -F arch=b32 -S unlink -S unlinkat -S rename -S renameat -F
-        auid>=1000 -F auid!=4294967295 -k delete
+      - -a always,exit -F arch=b64 -S unlink -S unlinkat -S rename -S renameat 
+        -F auid>=1000 -F auid!=4294967295 -k delete
+      - -a always,exit -F arch=b32 -S unlink -S unlinkat -S rename -S renameat 
+        -F auid>=1000 -F auid!=4294967295 -k delete
   - name: cis-4_1_15
     weight: 20
     comment: CIS 4.1.15 - Log changes to sudoers
@@ -456,7 +463,6 @@ auditbeat_test_config_command: auditbeat test config -d -c %s
 ## Discovered Tags
 
 **_auditbeat_**
-
 
 ## Dependencies
 
