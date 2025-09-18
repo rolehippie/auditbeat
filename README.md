@@ -1,4 +1,4 @@
-# workspace
+# auditbeat
 
 [![Source Code](https://img.shields.io/badge/github-source%20code-blue?logo=github&logoColor=white)](https://github.com/rolehippie/auditbeat)
 [![General Workflow](https://github.com/rolehippie/auditbeat/actions/workflows/general.yml/badge.svg)](https://github.com/rolehippie/auditbeat/actions/workflows/general.yml)

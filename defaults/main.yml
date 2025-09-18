@@ -12,7 +12,7 @@ auditbeat_tags: []
 auditbeat_rules_path: /etc/auditbeat/audit.rules.d
 
 # @var auditbeat_suid_guid_rule_enabled:description: Search suid/guid programs on disk
-auditbeat_suid_guid_rule_enabled: False
+auditbeat_suid_guid_rule_enabled: false
 
 # @var auditbeat_suid_guid_rule_files:description: Define a default list of suid/guid files
 auditbeat_suid_guid_rule_files: []
@@ -205,7 +205,7 @@ auditbeat_default_modules:
       - socket
       - user
     state.period: 12h
-    user.detect_password_changes: True
+    user.detect_password_changes: true
     login.wtmp_file_pattern: /var/log/wtmp*
     login.btmp_file_pattern: /var/log/btmp*
 
@@ -228,13 +228,13 @@ auditbeat_group_processors: []
 auditbeat_host_processors: []
 
 # @var auditbeat_service_enabled:description: Enable the logstash output
-auditbeat_logstash_enabled: True
+auditbeat_logstash_enabled: true
 
 # @var auditbeat_service_enabled:description: List of hosts for logstash output
 auditbeat_logstash_hosts: []
 
 # @var auditbeat_service_enabled:description: Enable the console output
-auditbeat_console_enabled: False
+auditbeat_console_enabled: false
 
 # @var auditbeat_logging_level:description: Define logging level
 auditbeat_logging_level: info

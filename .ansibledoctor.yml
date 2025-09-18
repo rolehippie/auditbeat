@@ -1,4 +1,5 @@
 ---
-role_name: auditbeat
+role:
+  name: auditbeat
 
 ...

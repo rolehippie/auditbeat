@@ -2,9 +2,8 @@
 - name: Converge
   hosts: all
   vars:
-    auditbeat_logstash_enabled: False
-    auditbeat_console_enabled: True
-    auditbeat_test_config_command: ~
+    auditbeat_logstash_enabled: false
+    auditbeat_console_enabled: true
     auditbeat_default_rules:
       - name: current-dir
         comment: Ignore current working directory records

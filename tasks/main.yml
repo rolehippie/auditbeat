@@ -1,4 +1,13 @@
 ---
+- name: Remove legacy repo
+  ansible.builtin.apt_repository:
+    repo: "deb https://artifacts.elastic.co/packages/{{ auditbeat_major_version }}.x/apt stable main"
+    filename: elastic
+    update_cache: false
+    state: absent
+  tags:
+    - auditbeat
+
 - name: Remove legacy key
   ansible.builtin.apt_key:
     id: 46095ACC8548582C1A2699A9D27D666CD88E42B4
@@ -6,19 +15,30 @@
   tags:
     - auditbeat
 
-- name: Remove legacy repo
-  ansible.builtin.apt_repository:
-    repo: "deb https://artifacts.elastic.co/packages/{{ auditbeat_major_version }}.x/apt stable main"
-    filename: elastic
-    update_cache: False
-    state: absent
+- name: Download repo key
+  register: auditbeat_key_download
+  ansible.builtin.get_url:
+    url: https://artifacts.elastic.co/GPG-KEY-elasticsearch
+    dest: "{{ auditbeat_keyring }}.asc"
+    mode: u=rw,g=r,o=r
+    force: true
   tags:
     - auditbeat
 
-- name: Download repo key
-  ansible.builtin.shell:
-    cmd: "curl -sSL 'https://artifacts.elastic.co/GPG-KEY-elasticsearch' | gpg --dearmor --output {{ auditbeat_keyring }}"
-    creates: "{{ auditbeat_keyring }}"
+- name: Check repo key
+  register: auditbeat_key_status
+  ansible.builtin.stat:
+    path: "{{ auditbeat_keyring }}"
+  tags:
+    - auditbeat
+
+- name: Dearmor repo key
+  when:
+    - auditbeat_key_download.changed or not auditbeat_key_status.stat.exists
+  register: auditbeat_key_convert
+  changed_when: auditbeat_key_convert.rc == 0
+  ansible.builtin.command:
+    cmd: "gpg --dearmor -o {{ auditbeat_keyring }} {{ auditbeat_keyring }}.asc"
   tags:
     - auditbeat
 
@@ -26,7 +46,7 @@
   ansible.builtin.apt_repository:
     repo: "deb [signed-by={{ auditbeat_keyring }}] https://artifacts.elastic.co/packages/{{ auditbeat_major_version }}.x/apt stable main"
     filename: elastic
-    update_cache: True
+    update_cache: true
     state: present
   tags:
     - auditbeat
@@ -45,7 +65,7 @@
     - auditbeat_suid_guid_rule_enabled
     - auditbeat_suid_guid_rule_files | length == 0
   register: auditbeat_suid_guid_rule_exec
-  changed_when: False
+  changed_when: false
   ansible.builtin.command: find / -xdev \( -perm -4000 -o -perm -2000 \) -type f
   tags:
     - auditbeat
@@ -72,7 +92,8 @@
   loop: "{{ auditbeat_default_rules + auditbeat_group_rules + auditbeat_host_rules }}"
   loop_control:
     label: "{{ item.name }}"
-  when: item.state | default('present') == 'present'
+  when:
+    - ('present' if item.state is not defined else item.state) == 'present'
   ansible.builtin.template:
     src: rules.j2
     dest: "{{ auditbeat_rules_path }}/{{ item.weight | default('10') }}_{{ item.name }}.conf"
@@ -88,7 +109,8 @@
   loop: "{{ auditbeat_default_rules + auditbeat_group_rules + auditbeat_host_rules }}"
   loop_control:
     label: "{{ item.name }}"
-  when: item.state | default('present') == 'absent'
+  when:
+    - ('present' if item.state is not defined else item.state) == 'absent'
   ansible.builtin.file:
     path: "{{ auditbeat_rules_path }}/{{ item.weight | default('10') }}_{{ item.name }}.conf"
     state: absent
@@ -112,9 +134,9 @@
   ansible.builtin.systemd:
     name: auditbeat
     state: started
-    daemon_reload: True
-    masked: False
-    enabled: True
+    daemon_reload: true
+    masked: false
+    enabled: true
   tags:
     - auditbeat
 
