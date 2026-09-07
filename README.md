@@ -383,7 +383,7 @@ Name of the shipper within the output
 #### Default value
 
 ```YAML
-auditbeat_name: '{{ ansible_facts['hostname'] }}'
+auditbeat_name: "{{ ansible_facts['hostname'] }}"
 ```
 
 ### auditbeat_rules_path
