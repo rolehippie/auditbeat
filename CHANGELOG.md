@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.5.0](https://github.com/rolehippie/auditbeat/compare/v2.4.1...v2.5.0) (2026-09-07)
+
+### Features
+
+* add separate requirements for molecule run ([872a019](https://github.com/rolehippie/auditbeat/commit/872a0197d8e0a8a01a047660b4e07d6c93ad5bde))
+* use new required facts as attributes ([4147752](https://github.com/rolehippie/auditbeat/commit/4147752ea279e290590bc7b14e3a8153cdc1e462))
+
 ## [2.4.1](https://github.com/rolehippie/auditbeat/compare/v2.4.0...v2.4.1) (2026-08-31)
 
 ### Dependencies
