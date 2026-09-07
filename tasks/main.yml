@@ -38,7 +38,7 @@
   register: auditbeat_key_convert
   changed_when: auditbeat_key_convert.rc == 0
   ansible.builtin.command:
-    cmd: "gpg --dearmor -o {{ auditbeat_keyring }} {{ auditbeat_keyring }}.asc"
+    cmd: "gpg --batch --yes --dearmor -o {{ auditbeat_keyring }} {{ auditbeat_keyring }}.asc"
   tags:
     - auditbeat
 
